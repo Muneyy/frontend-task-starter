@@ -18,7 +18,7 @@ export default function TodoContainer({
     >
       {todosArray.length > 0
         ? (todosArray.map((todo) => (
-          <div className="flex flex-col w-full">
+          <div key={todo.id} className="flex flex-col w-full">
             <TodoItem todoItem={todo} />
           </div>
         ))) : (

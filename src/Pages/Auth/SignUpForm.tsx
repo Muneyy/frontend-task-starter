@@ -1,9 +1,10 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { ApolloClient, gql } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 import FormInput from './Components/FormInput.tsx';
 import { AuthContext } from '../../main.tsx';
+import Spinner from '../Loading/Spinner.tsx';
 
 type Inputs = {
   Email: string;
@@ -21,6 +22,9 @@ export default function SignUpForm({ client }: AppProps) {
     formState: { errors },
   } = useForm<Inputs>();
 
+  const [isLoadingLogIn, setIsLoadingLogIn] = useState<boolean>(false);
+  const [isLoadingSignUp, setIsLoadingSignUp] = useState<boolean>(false);
+
   // const [getToken, { data }] = useMutation(gql`
   //   mutation Token {
   //     token(email: "test@skand.io", password: "testtest")
@@ -35,7 +39,7 @@ export default function SignUpForm({ client }: AppProps) {
   // Handle Sign up and Log in functionalities
   const handleSignUpSubmit: SubmitHandler<Inputs> = async (data) => {
     console.log(data);
-
+    setIsLoadingSignUp(true);
     try {
       const createUserMutation = gql`
         mutation createUser($email: String!, $password: String!) {
@@ -58,6 +62,7 @@ export default function SignUpForm({ client }: AppProps) {
     } catch (e) {
       console.log(e);
     }
+    setIsLoadingSignUp(false);
   };
 
   const {
@@ -75,6 +80,7 @@ export default function SignUpForm({ client }: AppProps) {
   const handleLogInSubmit: SubmitHandler<Inputs> = async (data) => {
     console.log(data);
     // Log in User using gql mutation
+    setIsLoadingLogIn(true);
     try {
       const logInUser = gql`
         mutation LogInUser($email: String!, $password: String!) {
@@ -96,6 +102,7 @@ export default function SignUpForm({ client }: AppProps) {
     } catch (e) {
       console.log(e);
     }
+    setIsLoadingLogIn(false);
   };
 
   return (
@@ -119,15 +126,18 @@ export default function SignUpForm({ client }: AppProps) {
               className="w-[90px] rounded-xl shadow-md bg-[#F3F1F2] p-3 text-black font-medium hover:text-[#DF2060] active:opacity-80"
               onClick={handleSubmit(handleLogInSubmit)}
               type="button"
+              disabled={isLoadingLogIn}
             >
-              Log in
+              {isLoadingLogIn ? <Spinner /> : 'Log in'}
+
             </button>
             <button
               className="w-[90px] rounded-xl shadow-md bg-[#DF2060] p-3 text-[#F3F1F2] font-medium hover:opacity-80 active:opacity-80"
               onClick={handleSubmit(handleSignUpSubmit)}
               type="button"
+              disabled={isLoadingSignUp}
             >
-              Sign up
+              {isLoadingSignUp ? <Spinner /> : 'Sign up'}
             </button>
           </div>
         </div>
