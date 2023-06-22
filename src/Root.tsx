@@ -1,7 +1,7 @@
 import { gql, useMutation } from '@apollo/client';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
-export const Root = () => {
+export default function Root() {
   // to log in, get a json web token
   // this account has been seeded to the database in advance
   const [getToken, { data }] = useMutation(gql`
@@ -15,5 +15,6 @@ export const Root = () => {
   }, [getToken]);
 
   // simply show the token for now
+  // eslint-disable-next-line react/jsx-no-useless-fragment
   return <>{data?.token}</>;
-};
+}

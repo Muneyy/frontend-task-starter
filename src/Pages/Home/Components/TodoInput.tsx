@@ -8,7 +8,9 @@ type Inputs = {
 
 export default function TodoInput() {
   const {
-    register, handleSubmit, formState: { errors },
+    register,
+    handleSubmit,
+    formState: { errors },
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
@@ -18,9 +20,10 @@ export default function TodoInput() {
   // const [isChecked, setIsChecked] = useState<boolean>(false);
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-2">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex flex-row bg-white w-full items-center
+        <div
+          className="flex flex-row bg-white w-full items-center
         p-3 border-1 border-white m-0 rounded-lg shadow-md box-border
         outline-none focus-within:border-[#DF2060]
         focus:outline-none gap-2"

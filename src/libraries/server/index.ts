@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createGraphQLHandler } from '@miragejs/graphql';
@@ -97,6 +99,7 @@ export const server = createServer({
     this.post('/graphql', graphQLHandler);
   },
 
+  // eslint-disable-next-line no-shadow
   seeds(server) {
     const now = dayjs().valueOf();
     server.create('User', {
