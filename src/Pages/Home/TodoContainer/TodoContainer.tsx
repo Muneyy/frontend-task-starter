@@ -1,13 +1,19 @@
 import React from 'react';
 import TodoItem from '../Components/TodoItem.tsx';
 
+interface Todo {
+  id: string,
+  content: string,
+  status: string,
+}
+
 type TodoInputProps = {
     todosArray: Todo[];
-    setTodosArray: React.Dispatch<React.SetStateAction<Todo[]>>;
   };
 
 export default function TodoContainer({
-  todosArray, setTodosArray,
+  // eslint-disable-next-line no-unused-vars
+  todosArray,
 }: TodoInputProps) {
   return (
     <div

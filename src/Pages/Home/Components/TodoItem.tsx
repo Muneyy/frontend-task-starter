@@ -20,11 +20,10 @@ export default function TodoItem({
 }: TodoItemProps) {
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const {
-    register, handleSubmit,
+    handleSubmit,
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    console.log(todoItem);
+  const onSubmit: SubmitHandler<Inputs> = async () => {
     setIsChecked(!isChecked);
   };
 

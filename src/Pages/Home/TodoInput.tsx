@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { gql } from '@apollo/client';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { AuthContext } from '../../main.tsx';
 import Spinner from '../Loading/Spinner.tsx';
@@ -16,12 +16,12 @@ interface Todo {
 }
 
 type TodoInputProps = {
-  todosArray: Todo[];
   setTodosArray: React.Dispatch<React.SetStateAction<Todo[]>>;
 };
 
 export default function TodoInput({
-  todosArray, setTodosArray,
+  // eslint-disable-next-line no-unused-vars
+  setTodosArray,
 }: TodoInputProps) {
   const {
     register,

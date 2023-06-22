@@ -26,13 +26,13 @@ export const server = createServer({
       root: undefined,
       resolvers: {
         Query: {
-          async userTodos(obj: any, args: any, context: any, info: any) {
+          async userTodos(_obj: any, _args: any, context: any, _info: any) {
             const user = await getCurrentUser(context);
             return user.todos.models;
           },
         },
         Mutation: {
-          createUser(obj: any, args: any, context: any, info: any) {
+          createUser(_obj: any, args: any, context: any, _info: any) {
             const { email, password } = args;
             const oldUser = context.mirageSchema.users.findBy({ email });
             if (oldUser) {
@@ -48,7 +48,7 @@ export const server = createServer({
             return user;
           },
 
-          async createTodo(obj: any, args: any, context: any, info: any) {
+          async createTodo(_obj: any, args: any, context: any, _info: any) {
             const { content } = args;
             const user = await getCurrentUser(context);
             const now = dayjs().valueOf();
@@ -62,7 +62,7 @@ export const server = createServer({
             return todo;
           },
 
-          async updateTodo(obj: any, args: any, context: any, info: any) {
+          async updateTodo(_obj: any, args: any, context: any, _info: any) {
             const {
               todo: { id, content, status },
             } = args;
@@ -75,7 +75,7 @@ export const server = createServer({
             return todo;
           },
 
-          async deleteTodo(obj: any, args: any, context: any, info: any) {
+          async deleteTodo(_obj: any, args: any, context: any, _info: any) {
             const { id } = args;
             const user = await getCurrentUser(context);
             const todo = user.todos.models.find((t: any) => t.id === id);
@@ -84,7 +84,7 @@ export const server = createServer({
             return true;
           },
 
-          async token(obj: any, args: any, context: any, info: any) {
+          async token(_obj: any, args: any, context: any, _info: any) {
             const { email, password } = args;
             const user = context.mirageSchema.users.findBy({ email });
             if (!user) throw new GraphQLError('user does not exist or wrong password');

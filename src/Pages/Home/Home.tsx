@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import TodoInput from './TodoInput.tsx';
 import { AuthContext } from '../../main.tsx';
 import TodoContainer from './TodoContainer/TodoContainer.tsx';
@@ -37,8 +36,8 @@ export default function Home() {
           {user && `, Welcome ${user}`}
         </h3>
       </div>
-      <TodoInput todosArray={todosArray} setTodosArray={setTodosArray} />
-      <TodoContainer todosArray={todosArray} setTodosArray={setTodosArray} />
+      <TodoInput setTodosArray={setTodosArray} />
+      <TodoContainer todosArray={todosArray} />
     </>
   );
 }

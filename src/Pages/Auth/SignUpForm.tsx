@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { ApolloClient, gql } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
@@ -66,7 +66,7 @@ export default function SignUpForm({ client }: AppProps) {
   };
 
   const {
-    token, user, setToken, setUser,
+    setToken, setUser,
   } = useContext(AuthContext);
 
   // useEffect(() => {
