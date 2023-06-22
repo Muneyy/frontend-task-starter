@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable import/extensions */
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import {
+  ApolloClient, ApolloProvider, InMemoryCache, NormalizedCacheObject,
+} from '@apollo/client';
 import React, {
   createContext, useMemo, useState, Dispatch,
 } from 'react';
@@ -20,11 +22,12 @@ interface AuthContextValue {
   user: User | null;
   setToken: Dispatch<string | null>;
   setUser: Dispatch<User | null>;
+  client: ApolloClient<NormalizedCacheObject>,
 }
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  uri: 'http://localhost:5173/graphql',
+  uri: '/graphql',
 });
 
 // eslint-disable-next-line import/prefer-default-export
@@ -33,6 +36,7 @@ export const AuthContext = createContext<AuthContextValue>({
   user: null,
   setToken: () => {},
   setUser: () => {},
+  client,
 });
 
 function AuthProvider({ children }: any) {
@@ -46,6 +50,7 @@ function AuthProvider({ children }: any) {
       user,
       setToken,
       setUser,
+      client,
     }),
     [token, user],
   );

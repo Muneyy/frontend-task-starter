@@ -17,18 +17,20 @@ const FormInput: React.FC<FormInputProps> = ({ register, errors, placeholderText
       border-1 border-white m-0 rounded-lg shadow-md box-border outline-none
       focus-within:border-[#DF2060] focus:outline-none gap-2"
       >
-        <button
-          type="button"
-          className={`outline-none rounded-full border-2 border-[#DF2060]
-          ${isChecked ? 'bg-[#DF2060] text-white' : 'bg-white text-white'} 
-          h-5 w-5 text-xs`}
-          onClick={(e) => {
-            e.preventDefault();
-            setIsChecked(!isChecked);
-          }}
-        >
-          &#x2713;
-        </button>
+        <div className="w-5">
+          <button
+            type="button"
+            className={`outline-none rounded-full border-2 border-[#DF2060]
+            ${isChecked ? 'bg-[#DF2060] text-white' : 'bg-white text-white'}
+            h-5 w-5 text-xs`}
+            onClick={(e) => {
+              e.preventDefault();
+              setIsChecked(!isChecked);
+            }}
+          >
+            &#x2713;
+          </button>
+        </div>
         <input
           type={placeholderText === 'Password' ? 'password' : 'text'}
           className="border-0 outline-none w-full"

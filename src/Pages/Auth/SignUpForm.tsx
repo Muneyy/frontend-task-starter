@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { ApolloClient, gql } from '@apollo/client';
+import { useNavigate } from 'react-router-dom';
 import FormInput from './Components/FormInput.tsx';
 import { AuthContext } from '../../main.tsx';
 
@@ -63,11 +64,13 @@ export default function SignUpForm({ client }: AppProps) {
     token, user, setToken, setUser,
   } = useContext(AuthContext);
 
-  useEffect(() => {
-    console.log('This is the token and user');
-    console.log(token);
-    console.log(user);
-  }, [token, user]);
+  // useEffect(() => {
+  //   console.log('This is the token and user');
+  //   console.log(token);
+  //   console.log(user);
+  // }, [token, user]);
+
+  const navigate = useNavigate();
 
   const handleLogInSubmit: SubmitHandler<Inputs> = async (data) => {
     console.log(data);
@@ -89,6 +92,7 @@ export default function SignUpForm({ client }: AppProps) {
       console.log(response);
       setToken(response.data.token);
       setUser(data.Email);
+      navigate('/home');
     } catch (e) {
       console.log(e);
     }
