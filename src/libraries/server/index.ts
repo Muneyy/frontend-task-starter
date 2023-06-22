@@ -1,10 +1,12 @@
+/* eslint-disable import/prefer-default-export */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createGraphQLHandler } from '@miragejs/graphql';
 import bcrypt from 'bcryptjs';
 import dayjs from 'dayjs';
 import { GraphQLError } from 'graphql';
 import { createServer } from 'miragejs';
-import { sign, verify } from './jwt';
-import { schema } from './schema';
+import { sign, verify } from './jwt.ts';
+import { schema } from './schema.ts';
 
 const getCurrentUser = async (context: any) => {
   const token = context.request.requestHeaders.authorization;
@@ -25,7 +27,7 @@ export const server = createServer({
           async userTodos(obj: any, args: any, context: any, info: any) {
             const user = await getCurrentUser(context);
             return user.todos.models;
-          }
+          },
         },
         Mutation: {
           createUser(obj: any, args: any, context: any, info: any) {
@@ -39,7 +41,7 @@ export const server = createServer({
             const user = context.mirageSchema.create('User', {
               email,
               passwordHashed,
-              createdAt: now
+              createdAt: now,
             });
             return user;
           },
@@ -53,14 +55,14 @@ export const server = createServer({
               user,
               status: 'TODO',
               createdAt: now,
-              updatedAt: now
+              updatedAt: now,
             });
             return todo;
           },
 
           async updateTodo(obj: any, args: any, context: any, info: any) {
             const {
-              todo: { id, content, status }
+              todo: { id, content, status },
             } = args;
             const user = await getCurrentUser(context);
             const todo = user.todos.models.find((t: any) => t.id === id);
@@ -87,9 +89,9 @@ export const server = createServer({
             const match = bcrypt.compareSync(password, user.passwordHashed);
             if (!match) throw new GraphQLError('user does not exist or wrong password');
             return sign({ id: user.id, email: user.email });
-          }
-        }
-      }
+          },
+        },
+      },
     });
 
     this.post('/graphql', graphQLHandler);
@@ -100,7 +102,7 @@ export const server = createServer({
     server.create('User', {
       email: 'test@skand.io',
       passwordHashed: bcrypt.hashSync('testtest', 8),
-      createdAt: now
+      createdAt: now,
     } as any);
-  }
+  },
 });
