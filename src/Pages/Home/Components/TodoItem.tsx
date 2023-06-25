@@ -1,7 +1,16 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { gql } from '@apollo/client';
+import Spinner from '../../Loading/Spinner.tsx';
+import { AuthContext } from '../../../main.tsx';
+
+interface Todo {
+  id: string,
+  content: string,
+  status: string,
+}
 
 type Inputs = {
     TodoInput: string;
@@ -13,18 +22,93 @@ interface TodoItemProps {
     content: string,
     status: string,
   }
+  setTodosArray: React.Dispatch<React.SetStateAction<Todo[]>>;
 }
 
 export default function TodoItem({
-  todoItem,
+  todoItem, setTodosArray,
 }: TodoItemProps) {
   const [isChecked, setIsChecked] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isEditLoading, setIsEditLoading] = useState<boolean>(false);
+
   const {
     handleSubmit,
+    register,
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async () => {
     setIsChecked(!isChecked);
+  };
+
+  const {
+    client, token,
+  } = useContext(AuthContext);
+
+  const onSubmitEdit: SubmitHandler<Inputs> = async (data) => {
+    try {
+      console.log(data);
+      console.log(todoItem);
+      setIsEditLoading(true);
+      const editTodo = gql`
+      mutation updateTodo($id: ID!, $content: String!, $status: TodoStatus!) {
+        updateTodo(todo: {id: $id, content: $content, status: $status}) {
+          id
+          content
+          status
+        }
+      }
+      `;
+      const response = await client.mutate({
+        mutation: editTodo,
+        variables: {
+          id: todoItem.id,
+          content: data.TodoInput,
+          status: todoItem.status,
+        },
+        context: {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      });
+
+      const userTodos = gql`
+      query userTodos {
+        userTodos {
+          id
+          content
+          status
+        }
+      }
+      `;
+
+      const queryResponse = await client.query({
+        query: userTodos,
+        context: {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+        fetchPolicy: 'network-only',
+      });
+
+      setTodosArray([...queryResponse.data.userTodos]);
+      setIsEditLoading(false);
+      setIsEditing(!isEditing);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleEditClick = (e: any) => {
+    e.preventDefault();
+    if (!isEditing) {
+      setIsEditing(!isEditing);
+    }
+    if (isEditing) {
+      handleSubmit(onSubmitEdit)();
+    }
   };
 
   return (
@@ -44,17 +128,31 @@ export default function TodoItem({
             </button>
           </div>
           {/* Add CONDITIONAL STATE for Edit Functionality */}
-          {/* <input
-            type="text"
-            className="border-0 outline-none w-full"
-            placeholder="Sample Todo"
-            {...register('TodoInput', { required: true })}
-          /> */}
-          <p
-            className={`w-full select-none ${isChecked ? 'line-through text-[#86797D]' : ''}`}
+          {isEditing ? (
+            <input
+              type="text"
+              className="border-0 outline-none w-full"
+              placeholder={todoItem.content}
+              {...register('TodoInput', { required: true })}
+            />
+          ) : (
+            <p
+              className={`w-full select-none ${isChecked ? 'line-through text-[#86797D]' : ''}`}
+            >
+              {todoItem.content}
+            </p>
+          )}
+          <button
+            type="button"
+            className={`text-[#86797D] hover:text-[#DF2060] select-none
+            ${isEditing ? 'text-[#DF2060]' : ''}
+            `}
+            onClick={(e) => {
+              handleEditClick(e);
+            }}
           >
-            {todoItem.content}
-          </p>
+            {isEditLoading ? <Spinner /> : 'Edit'}
+          </button>
           <button
             type="submit"
             className="text-[#86797D] hover:text-[#DF2060] select-none"

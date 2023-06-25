@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import TodoInput from './TodoInput.tsx';
 import { AuthContext } from '../../main.tsx';
 import TodoContainer from './TodoContainer/TodoContainer.tsx';
@@ -15,10 +15,6 @@ export default function Home() {
   } = useContext(AuthContext);
 
   const [todosArray, setTodosArray] = useState<Todo[]>([]);
-
-  useEffect(() => {
-    console.log(todosArray);
-  }, [todosArray]);
 
   // Redirect user if they are not logged into the site
   // const navigate = useNavigate();
@@ -37,7 +33,7 @@ export default function Home() {
         </h3>
       </div>
       <TodoInput setTodosArray={setTodosArray} />
-      <TodoContainer todosArray={todosArray} />
+      <TodoContainer todosArray={todosArray} setTodosArray={setTodosArray} />
     </>
   );
 }

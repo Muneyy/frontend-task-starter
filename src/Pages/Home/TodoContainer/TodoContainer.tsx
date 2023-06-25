@@ -9,11 +9,12 @@ interface Todo {
 
 type TodoInputProps = {
     todosArray: Todo[];
+    setTodosArray: React.Dispatch<React.SetStateAction<Todo[]>>;
   };
 
 export default function TodoContainer({
   // eslint-disable-next-line no-unused-vars
-  todosArray,
+  todosArray, setTodosArray,
 }: TodoInputProps) {
   return (
     <div
@@ -25,7 +26,7 @@ export default function TodoContainer({
       {todosArray.length > 0
         ? (todosArray.map((todo) => (
           <div key={todo.id} className="flex flex-col w-full">
-            <TodoItem todoItem={todo} />
+            <TodoItem setTodosArray={setTodosArray} todoItem={todo} />
           </div>
         ))) : (
           <div className="flex flex-row justify-center text-center text-[#86797D] bg-white w-full items-center p-3 m-0 rounded-lg box-border outline-none focus-within:border-[#DF2060] focus:outline-none gap-2">
