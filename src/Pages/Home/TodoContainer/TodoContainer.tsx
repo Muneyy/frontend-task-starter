@@ -19,18 +19,6 @@ export default function TodoContainer({
   const [pageNumber, setPageNumber] = React.useState<number>(0);
   const [arrayDisplay, setArrayDisplay] = React.useState<number[]>([1]);
 
-  // function sliceArray(inputArray: number[]) {
-  //   if (todosArray.length > 6) {
-  //     if (pageNumber > todosArray.length - 5) {
-  //       const slicedArray = inputArray.slice(todosArray.length - 5, todosArray.length);
-  //       return slicedArray;
-  //     }
-  //   }
-  //   const slicedArray = inputArray.slice(0, 5);
-
-  //   return slicedArray;
-  // }
-
   function sliceArray(inputArray: number[]) {
     const totalPages = Math.ceil(todosArray.length / 3);
     const startPage = Math.max(0, pageNumber - 5);
@@ -44,15 +32,28 @@ export default function TodoContainer({
     setArrayDisplay([...sliceArray([...Array(Math.ceil(todosArray.length / 3)).keys()])]);
   }, [todosArray]);
 
-  useEffect(() => {
-    console.log(pageNumber);
+  function incrementPageNumber(currentPage: number) {
+    const incrementedPageNumber = currentPage + 1;
+    console.log(incrementedPageNumber);
     console.log(arrayDisplay);
-    if (pageNumber > arrayDisplay.length - 1) {
-      setArrayDisplay([...sliceArray([...Array(Math.ceil(todosArray.length / 3)).keys()])]);
-    } else if (pageNumber < arrayDisplay[0]) {
+    if (currentPage < Math.ceil(todosArray.length / 3) - 1) {
+      setPageNumber(incrementedPageNumber);
+    }
+  }
+
+  function decrementPageNumber(currentPage: number) {
+    const decrementedPageNumber = currentPage - 1;
+    console.log(decrementedPageNumber);
+    console.log(arrayDisplay);
+    if (currentPage > 0) {
+      setPageNumber(decrementedPageNumber);
+    }
+  }
+
+  useEffect(() => {
+    if (!arrayDisplay.includes(pageNumber)) {
       setArrayDisplay([...sliceArray([...Array(Math.ceil(todosArray.length / 3)).keys()])]);
     }
-    // setArrayDisplay([...sliceArray([...Array(Math.ceil(todosArray.length / 3)).keys()])]);
   }, [pageNumber]);
 
   return (
@@ -80,13 +81,15 @@ export default function TodoContainer({
         )}
       {todosArray.length > 3 ? (
         <div className="flex flex-row gap-3">
+          {/* {arrayDisplay.includes(0) ? (null) : ( */}
           <button
             type="button"
             onClick={(e) => {
               e.preventDefault();
-              if (pageNumber > 0) {
-                setPageNumber(pageNumber - 1);
-              }
+              // if (pageNumber > 0) {
+              //   setPageNumber(pageNumber - 1);
+              // }
+              decrementPageNumber(pageNumber);
             }}
             className="
               rounded-lg w-10 h-10 text-[#86797D]
@@ -96,6 +99,7 @@ export default function TodoContainer({
           >
             {'<'}
           </button>
+          {/* )} */}
           {arrayDisplay
             // .slice(
             //   pageNumber,
@@ -120,13 +124,15 @@ export default function TodoContainer({
                 {page + 1}
               </button>
             ))}
+          {/* {arrayDisplay.includes(arrayDisplay.length + 1) ? (null) : ( */}
           <button
             type="button"
             onClick={(e) => {
               e.preventDefault();
-              if (pageNumber < Math.ceil(todosArray.length / 3) - 1) {
-                setPageNumber(pageNumber + 1);
-              }
+              // if (pageNumber < Math.ceil(todosArray.length / 3) - 1) {
+              //   setPageNumber(pageNumber + 1);
+              // }
+              incrementPageNumber(pageNumber);
             }}
             className="
               rounded-lg w-10 h-10 text-[#86797D]
@@ -136,6 +142,7 @@ export default function TodoContainer({
           >
             {'>'}
           </button>
+          {/* )} */}
         </div>
       ) : (
         null
