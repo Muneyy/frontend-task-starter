@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { ApolloClient, gql } from '@apollo/client';
+import { ApolloClient, ApolloError, gql } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../main.tsx';
 import Spinner from '../Loading/Spinner.tsx';
@@ -25,6 +25,7 @@ export default function SignUpForm({ client }: AppProps) {
 
   const [isLoadingLogIn, setIsLoadingLogIn] = useState<boolean>(false);
   const [isLoadingSignUp, setIsLoadingSignUp] = useState<boolean>(false);
+  const [authFailed, setAuthFailed] = useState<boolean>(false);
 
   // Submit Form
   // Handle Sign up and Log in functionalities
@@ -50,6 +51,10 @@ export default function SignUpForm({ client }: AppProps) {
       });
 
       console.log(response);
+
+      if (response.errors && response.errors[0].message === 'user does not exist or wrong password') {
+        setAuthFailed(true);
+      }
     } catch (e) {
       console.log(e);
     }
@@ -85,7 +90,24 @@ export default function SignUpForm({ client }: AppProps) {
       setUser(data.Email);
       navigate('/home');
     } catch (e) {
-      console.log(e);
+      if (e instanceof ApolloError) {
+        const {
+          message,
+        } = e;
+
+        // console.log(message); // "user does not exist or wrong password"
+        // console.log(graphQLErrors); // Array of GraphQL error objects
+        // console.log(networkError); // Network error, if any
+        // console.log(extraInfo); // Additional information, if available
+
+        // Handle the error based on your requirements
+        if (message === 'user does not exist or wrong password') {
+          setAuthFailed(true);
+        }
+      } else {
+        // Handle non-ApolloError exceptions
+        console.log(e);
+      }
     }
     setIsLoadingLogIn(false);
   };
@@ -103,6 +125,7 @@ export default function SignUpForm({ client }: AppProps) {
             register={register}
             errors={errors}
           />
+          {authFailed && <p className="text-red-600">Incorrect Email or Password</p>}
           <div className="flex flex-row gap-3 justify-end">
             <button
               className="w-[90px] rounded-xl shadow-md bg-[#F3F1F2] p-3 text-black font-medium hover:text-[#DF2060] active:opacity-80"
