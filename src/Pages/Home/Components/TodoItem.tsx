@@ -131,7 +131,9 @@ export default function TodoItem({
           {isEditing ? (
             <input
               type="text"
-              className="border-0 outline-none w-full"
+              className={`border-0 outline-none w-full
+              ${isEditLoading ? 'opacity-50' : ''}
+              `}
               placeholder={todoItem.content}
               {...register('TodoInput', { required: true })}
             />

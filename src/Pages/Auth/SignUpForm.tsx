@@ -2,9 +2,10 @@ import React, { useContext, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { ApolloClient, gql } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
-import FormInput from './Components/FormInput.tsx';
 import { AuthContext } from '../../main.tsx';
 import Spinner from '../Loading/Spinner.tsx';
+import InputEmail from './Components/InputEmail.tsx';
+import InputPassword from './Components/InputPassword.tsx';
 
 type Inputs = {
   Email: string;
@@ -24,16 +25,6 @@ export default function SignUpForm({ client }: AppProps) {
 
   const [isLoadingLogIn, setIsLoadingLogIn] = useState<boolean>(false);
   const [isLoadingSignUp, setIsLoadingSignUp] = useState<boolean>(false);
-
-  // const [getToken, { data }] = useMutation(gql`
-  //   mutation Token {
-  //     token(email: "test@skand.io", password: "testtest")
-  //   }
-  // `);
-
-  // useEffect(() => {
-  //   getToken();
-  // }, [getToken]);
 
   // Submit Form
   // Handle Sign up and Log in functionalities
@@ -68,12 +59,6 @@ export default function SignUpForm({ client }: AppProps) {
   const {
     setToken, setUser,
   } = useContext(AuthContext);
-
-  // useEffect(() => {
-  //   console.log('This is the token and user');
-  //   console.log(token);
-  //   console.log(user);
-  // }, [token, user]);
 
   const navigate = useNavigate();
 
@@ -110,18 +95,15 @@ export default function SignUpForm({ client }: AppProps) {
     <div className="flex flex-col">
       <form>
         <div className="flex flex-col gap-2">
-          <FormInput
+          <InputEmail
             register={register}
             errors={errors}
-            placeholderText="Email"
           />
-          <FormInput
+          <InputPassword
             register={register}
             errors={errors}
-            placeholderText="Password"
           />
           <div className="flex flex-row gap-3 justify-end">
-            {/* <input type="submit" /> */}
             <button
               className="w-[90px] rounded-xl shadow-md bg-[#F3F1F2] p-3 text-black font-medium hover:text-[#DF2060] active:opacity-80"
               onClick={handleSubmit(handleLogInSubmit)}
@@ -132,7 +114,7 @@ export default function SignUpForm({ client }: AppProps) {
 
             </button>
             <button
-              className="w-[90px] rounded-xl shadow-md bg-[#DF2060] p-3 text-[#F3F1F2] font-medium hover:opacity-80 active:opacity-80"
+              className="w-[90px] rounded-xl shadow-md bg-[#DF2060] p-3 text-[#F3F1F2] font-medium hover:opacity-80 active:opacity-90"
               onClick={handleSubmit(handleSignUpSubmit)}
               type="button"
               disabled={isLoadingSignUp}
