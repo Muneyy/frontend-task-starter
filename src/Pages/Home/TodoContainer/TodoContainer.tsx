@@ -20,7 +20,7 @@ export default function TodoContainer({
   const [arrayDisplay, setArrayDisplay] = React.useState<number[]>([1]);
 
   function sliceArray(inputArray: number[]) {
-    const totalPages = Math.ceil(todosArray.length / 3);
+    const totalPages = Math.ceil(todosArray.length   / 3);
     const startPage = Math.max(0, pageNumber - 5);
     const endPage = Math.min(startPage + 5, totalPages - 1);
 
@@ -95,9 +95,6 @@ export default function TodoContainer({
             type="button"
             onClick={(e) => {
               e.preventDefault();
-              // if (pageNumber > 0) {
-              //   setPageNumber(pageNumber - 1);
-              // }
               decrementPageNumber(pageNumber);
             }}
             className="
@@ -110,10 +107,6 @@ export default function TodoContainer({
           </button>
           {/* )} */}
           {arrayDisplay
-            // .slice(
-            //   pageNumber,
-            //   pageNumber + 1,
-            // )
             .map((page) => (
               <button
                 type="button"

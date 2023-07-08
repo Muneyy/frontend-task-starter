@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useContext, useEffect, useState } from 'react';
 
@@ -104,9 +105,8 @@ export default function TodoItem({
   const handleEditClick = (e: any) => {
     e.preventDefault();
     if (!isEditing) {
-      setIsEditing(!isEditing);
-    }
-    if (isEditing) {
+      setIsEditing(true);
+    } else if (isEditing) {
       handleSubmit(onSubmitEdit)();
     }
   };
@@ -224,7 +224,7 @@ export default function TodoItem({
               handleEditClick(e);
             }}
           >
-            {isEditLoading ? <Spinner /> : 'Edit'}
+            {isEditLoading ? <Spinner /> : (isEditing ? 'Submit' : 'Edit')}
           </button>
           <button
             type="submit"

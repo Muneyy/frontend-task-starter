@@ -25,19 +25,6 @@ export default function Home() {
     }
   });
 
-  // useEffect(() => {
-  //   const sortedTodosArray = [...todosArray].sort((a, b) => {
-  //     if (a.status === 'TODO' && b.status === 'DONE') {
-  //       return -1; // a comes before b
-  //     } if (a.status === 'DONE' && b.status === 'TODO') {
-  //       return 1; // a comes after b
-  //     }
-  //     return 0; // maintain the current order
-  //   });
-
-  //   setTodosArray(sortedTodosArray);
-  // }, [todosArray]);
-
   return (
     <>
       <div className="flex flex-row p-2 pl-0">
