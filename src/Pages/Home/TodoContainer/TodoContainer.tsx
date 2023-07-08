@@ -30,6 +30,7 @@ export default function TodoContainer({
 
   useEffect(() => {
     setArrayDisplay([...sliceArray([...Array(Math.ceil(todosArray.length / 3)).keys()])]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [todosArray]);
 
   function incrementPageNumber(currentPage: number) {
@@ -54,6 +55,7 @@ export default function TodoContainer({
     if (!arrayDisplay.includes(pageNumber)) {
       setArrayDisplay([...sliceArray([...Array(Math.ceil(todosArray.length / 3)).keys()])]);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber]);
 
   return (
@@ -81,7 +83,7 @@ export default function TodoContainer({
         )}
       {todosArray.length > 3 ? (
         <div className="flex flex-row gap-3">
-          {/* {arrayDisplay.includes(0) ? (null) : ( */}
+          {/* {pageNumber === 0 ? (null) : ( */}
           <button
             type="button"
             onClick={(e) => {
@@ -124,7 +126,7 @@ export default function TodoContainer({
                 {page + 1}
               </button>
             ))}
-          {/* {arrayDisplay.includes(arrayDisplay.length + 1) ? (null) : ( */}
+          {/* {((pageNumber) === arrayDisplay[arrayDisplay.length - 1]) ? null : ( */}
           <button
             type="button"
             onClick={(e) => {
