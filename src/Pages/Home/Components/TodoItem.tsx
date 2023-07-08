@@ -32,6 +32,7 @@ export default function TodoItem({
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isEditLoading, setIsEditLoading] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
   const {
     handleSubmit,
@@ -178,6 +179,59 @@ export default function TodoItem({
     handleSubmit(onSubmitDone)();
   };
 
+  const onSubmitDelete: SubmitHandler<Inputs> = async () => {
+    try {
+      const deleteTodo = gql`
+      mutation deleteTodo($id: ID!) {
+        deleteTodo(id: $id)
+      }
+      `;
+      await client.mutate({
+        mutation: deleteTodo,
+        variables: {
+          id: todoItem.id,
+        },
+        context: {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      });
+
+      // TODO: place this in a separate function
+      const userTodos = gql`
+      query userTodos {
+        userTodos {
+          id
+          content
+          status
+        }
+      }
+      `;
+
+      const queryResponse = await client.query({
+        query: userTodos,
+        context: {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+        fetchPolicy: 'network-only',
+      });
+
+      setTodosArray([...queryResponse.data.userTodos]);
+      setIsDeleting(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDeleteClick = (e: any) => {
+    e.preventDefault();
+    setIsDeleting(true);
+    handleSubmit(onSubmitDelete)();
+  };
+
   // update todo status based on todoItem.status
   useEffect(() => {
     setIsChecked(todoItem.status === 'DONE');
@@ -185,7 +239,7 @@ export default function TodoItem({
 
   return (
     <div className="w-full">
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmitDone)}>
         <div className="flex flex-row bg-white w-full items-center p-3 m-0 rounded-lg box-border outline-none focus-within:border-[#DF2060] focus:outline-none gap-2">
           <div className="w-5">
             <button
@@ -226,12 +280,34 @@ export default function TodoItem({
           >
             {isEditLoading ? <Spinner /> : (isEditing ? 'Submit' : 'Edit')}
           </button>
-          <button
-            type="submit"
-            className="text-[#86797D] hover:text-[#DF2060] select-none"
-          >
-            Done
-          </button>
+          {/* This needs to be Remove when todoItem.status is 'DONE' */}
+          {todoItem.status === 'TODO'
+            ? (
+              <button
+                type="submit"
+                className="text-[#86797D] hover:text-[#DF2060] select-none"
+              >
+                Done
+              </button>
+            )
+            : ((
+              isDeleting ? (
+                <Spinner />
+              ) : (
+                <button
+                  type="submit"
+                  className="text-[#86797D] hover:text-[#DF2060] select-none"
+                  onClick={(e) => {
+                    handleDeleteClick(e);
+                  }}
+                >
+                  Remove
+                </button>
+              )
+            )
+
+            )}
+
         </div>
       </form>
     </div>
