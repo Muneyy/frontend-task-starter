@@ -10,17 +10,17 @@ interface Todo {
 type TodoInputProps = {
     todosArray: Todo[];
     setTodosArray: React.Dispatch<React.SetStateAction<Todo[]>>;
+    filterText: string;
   };
 
 export default function TodoContainer({
-  // eslint-disable-next-line no-unused-vars
-  todosArray, setTodosArray,
+  todosArray, setTodosArray, filterText,
 }: TodoInputProps) {
   const [pageNumber, setPageNumber] = React.useState<number>(0);
   const [arrayDisplay, setArrayDisplay] = React.useState<number[]>([1]);
 
   function sliceArray(inputArray: number[]) {
-    const totalPages = Math.ceil(todosArray.length   / 3);
+    const totalPages = Math.ceil(todosArray.length / 3);
     const startPage = Math.max(0, pageNumber - 5);
     const endPage = Math.min(startPage + 5, totalPages - 1);
 
@@ -67,6 +67,7 @@ export default function TodoContainer({
     >
       {todosArray.length > 0
         ? (todosArray
+          .filter((todo) => todo.content.toLowerCase().includes(filterText.toLowerCase()))
           .sort((a, b) => {
             if (a.status === 'TODO' && b.status === 'DONE') {
               return -1; // a comes before b

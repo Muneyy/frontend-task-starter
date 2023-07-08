@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { gql } from '@apollo/client';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { AuthContext } from '../../main.tsx';
 import Spinner from '../Loading/Spinner.tsx';
@@ -16,12 +16,14 @@ interface Todo {
 }
 
 type TodoInputProps = {
+  setFilterText: React.Dispatch<React.SetStateAction<string>>;
   setTodosArray: React.Dispatch<React.SetStateAction<Todo[]>>;
 };
 
 export default function TodoInput({
   // eslint-disable-next-line no-unused-vars
   setTodosArray,
+  setFilterText,
 }: TodoInputProps) {
   const {
     register,
@@ -34,6 +36,17 @@ export default function TodoInput({
   } = useContext(AuthContext);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [filterInput, setFilterInput] = useState<string>('');
+
+  const handleFilterChange = (event: any) => {
+    const value = event?.target.value;
+    setFilterInput(value);
+  };
+
+  useEffect(() => {
+    console.log(filterInput);
+  }, [filterInput]);
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     console.log(data);
@@ -149,7 +162,23 @@ export default function TodoInput({
             type="text"
             className="border-0 outline-none w-full"
             placeholder="search todos..."
+            onChange={handleFilterChange}
+            value={filterInput}
           />
+          {filterInput && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              setFilterInput('');
+              setFilterText('');
+            }}
+            className="w-6 h-6 text-lg leading-none p-0 m-0
+            hover:text-[#DF2060]"
+          >
+            &times;
+          </button>
+          )}
         </div>
         <button
           className="w-[100px] rounded-xl shadow-md bg-[#F3F1F2] p-3
@@ -157,11 +186,14 @@ export default function TodoInput({
           hover:text-[#DF2060] active:opacity-80"
           onClick={(e) => {
             e.preventDefault();
+            setFilterText(filterInput);
           }}
           type="button"
         >
           Search
+
         </button>
+
         <button
           className={`w-[100px] rounded-xl shadow-md bg-[#DF2060] p-3
           text-[#F3F1F2] font-medium select-none

@@ -16,6 +16,7 @@ export default function Home() {
   } = useContext(AuthContext);
 
   const [todosArray, setTodosArray] = useState<Todo[]>([]);
+  const [filterText, setFilterText] = useState<string>('');
 
   // Redirect user if they are not logged into the site
   const navigate = useNavigate();
@@ -33,8 +34,12 @@ export default function Home() {
           {user && `, Welcome ${user}`}
         </h3>
       </div>
-      <TodoInput setTodosArray={setTodosArray} />
-      <TodoContainer todosArray={todosArray} setTodosArray={setTodosArray} />
+      <TodoInput setFilterText={setFilterText} setTodosArray={setTodosArray} />
+      <TodoContainer
+        filterText={filterText}
+        todosArray={todosArray}
+        setTodosArray={setTodosArray}
+      />
     </>
   );
 }
