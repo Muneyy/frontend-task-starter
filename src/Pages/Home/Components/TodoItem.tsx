@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { gql } from '@apollo/client';
@@ -59,7 +59,7 @@ export default function TodoItem({
         }
       }
       `;
-      const response = await client.mutate({
+      await client.mutate({
         mutation: editTodo,
         variables: {
           id: todoItem.id,
@@ -111,6 +111,78 @@ export default function TodoItem({
     }
   };
 
+  const onSubmitDone: SubmitHandler<Inputs> = async () => {
+    try {
+      // since state is not boolean, configure correct string for status
+      // if todoItem.status is true, set status to DONE
+      // if todoItem.status is false, set status to TODO
+      // if todoItem.status is null, set status to TODO
+      let status;
+      if (todoItem.status === 'DONE') {
+        status = 'TODO';
+      } else if (todoItem.status === 'TODO') {
+        status = 'DONE';
+      }
+
+      const doneTodo = gql`
+      mutation updateTodo($id: ID!, $content: String!, $status: TodoStatus!) {
+        updateTodo(todo: {id: $id, content: $content, status: $status}) {
+          id
+          content
+          status
+        }
+      }
+      `;
+      await client.mutate({
+        mutation: doneTodo,
+        variables: {
+          id: todoItem.id,
+          content: todoItem.content,
+          status,
+        },
+        context: {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      });
+
+      const userTodos = gql`
+      query userTodos {
+        userTodos {
+          id
+          content
+          status
+        }
+      }
+      `;
+
+      const queryResponse = await client.query({
+        query: userTodos,
+        context: {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+        fetchPolicy: 'network-only',
+      });
+
+      setTodosArray([...queryResponse.data.userTodos]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDoneClick = (e: any) => {
+    e.preventDefault();
+    handleSubmit(onSubmitDone)();
+  };
+
+  // update todo status based on todoItem.status
+  useEffect(() => {
+    setIsChecked(todoItem.status === 'DONE');
+  }, [todoItem]);
+
   return (
     <div className="w-full">
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -120,8 +192,7 @@ export default function TodoItem({
               type="button"
               className={`select-none outline-none rounded-full border-2 border-[#DF2060] ${isChecked ? 'bg-[#DF2060] text-white' : 'bg-white text-white'} h-5 w-5 text-xs`}
               onClick={(e) => {
-                e.preventDefault();
-                setIsChecked(!isChecked);
+                handleDoneClick(e);
               }}
             >
               &#x2713;

@@ -67,8 +67,15 @@ export default function TodoContainer({
     >
       {todosArray.length > 0
         ? (todosArray
+          .sort((a, b) => {
+            if (a.status === 'TODO' && b.status === 'DONE') {
+              return -1; // a comes before b
+            } if (a.status === 'DONE' && b.status === 'TODO') {
+              return 1; // a comes after b
+            }
+            return a.id.localeCompare(b.id); // maintain the current order
+          })
           .slice(pageNumber * 3, (pageNumber + 1) * 3)
-          .filter((todo) => todo.status === 'TODO')
           .map((todo) => (
             <div key={todo.id} className="flex flex-col w-full">
               <TodoItem setTodosArray={setTodosArray} todoItem={todo} />

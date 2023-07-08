@@ -1,4 +1,5 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import TodoInput from './TodoInput.tsx';
 import { AuthContext } from '../../main.tsx';
 import TodoContainer from './TodoContainer/TodoContainer.tsx';
@@ -17,12 +18,25 @@ export default function Home() {
   const [todosArray, setTodosArray] = useState<Todo[]>([]);
 
   // Redirect user if they are not logged into the site
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!user) {
+      navigate('/');
+    }
+  });
+
   // useEffect(() => {
-  //   if (!user) {
-  //     navigate('/');
-  //   }
-  // });
+  //   const sortedTodosArray = [...todosArray].sort((a, b) => {
+  //     if (a.status === 'TODO' && b.status === 'DONE') {
+  //       return -1; // a comes before b
+  //     } if (a.status === 'DONE' && b.status === 'TODO') {
+  //       return 1; // a comes after b
+  //     }
+  //     return 0; // maintain the current order
+  //   });
+
+  //   setTodosArray(sortedTodosArray);
+  // }, [todosArray]);
 
   return (
     <>
