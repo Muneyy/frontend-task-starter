@@ -33,6 +33,7 @@ export default function TodoItem({
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isEditLoading, setIsEditLoading] = useState<boolean>(false);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [isCompleting, setIsCompleting] = useState<boolean>(false);
 
   const {
     handleSubmit,
@@ -118,6 +119,7 @@ export default function TodoItem({
       // if todoItem.status is true, set status to DONE
       // if todoItem.status is false, set status to TODO
       // if todoItem.status is null, set status to TODO
+      setIsCompleting(true);
       let status;
       if (todoItem.status === 'DONE') {
         status = 'TODO';
@@ -169,6 +171,7 @@ export default function TodoItem({
       });
 
       setTodosArray([...queryResponse.data.userTodos]);
+      setIsCompleting(false);
     } catch (error) {
       console.log(error);
     }
@@ -242,15 +245,23 @@ export default function TodoItem({
       <form onSubmit={handleSubmit(onSubmitDone)}>
         <div className="flex flex-row bg-white w-full items-center p-3 m-0 rounded-lg box-border outline-none focus-within:border-[#DF2060] focus:outline-none gap-2">
           <div className="w-5">
-            <button
-              type="button"
-              className={`select-none outline-none rounded-full border-2 border-[#DF2060] ${isChecked ? 'bg-[#DF2060] text-white' : 'bg-white text-white'} h-5 w-5 text-xs`}
-              onClick={(e) => {
-                handleDoneClick(e);
-              }}
-            >
-              &#x2713;
-            </button>
+            {isCompleting
+              ? (
+                <div className="m-0 p-0 h-5 w-5 text-xs">
+                  <Spinner />
+                </div>
+              ) : (
+
+                <button
+                  type="button"
+                  className={`select-none outline-none rounded-full border-2 border-[#DF2060] ${isChecked ? 'bg-[#DF2060] text-white' : 'bg-white text-white'} h-5 w-5 text-xs`}
+                  onClick={(e) => {
+                    handleDoneClick(e);
+                  }}
+                >
+                  &#x2713;
+                </button>
+              )}
           </div>
           {/* Add CONDITIONAL STATE for Edit Functionality */}
           {isEditing ? (
@@ -290,21 +301,21 @@ export default function TodoItem({
                 Done
               </button>
             )
-            : ((
-              isDeleting ? (
-                <Spinner />
-              ) : (
-                <button
-                  type="submit"
-                  className="text-[#86797D] hover:text-[#DF2060] select-none"
-                  onClick={(e) => {
-                    handleDeleteClick(e);
-                  }}
-                >
-                  Remove
-                </button>
-              )
-            )
+            : (
+              <button
+                type="submit"
+                className="text-[#86797D] hover:text-[#DF2060] select-none"
+                onClick={(e) => {
+                  handleDeleteClick(e);
+                }}
+              >
+                {isDeleting
+                  ? (
+                    <Spinner />
+                  ) : (
+                    'Remove'
+                  )}
+              </button>
 
             )}
 
