@@ -244,7 +244,7 @@ export default function TodoItem({
     <div className="w-full">
       <form onSubmit={handleSubmit(onSubmitDone)}>
         <div className="flex flex-row bg-white w-full items-center p-3 m-0 rounded-lg box-border outline-none focus-within:border-[#DF2060] focus:outline-none gap-2">
-          <div className="w-5">
+          <div className="flex flex-row justify-center items-center text-[#DF2060]">
             {isCompleting
               ? (
                 <div className="m-0 p-0 h-5 w-5 text-xs">

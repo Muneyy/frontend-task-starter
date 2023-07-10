@@ -115,7 +115,7 @@ export default function TodoInput({
         outline-none focus-within:border-[#DF2060]
         focus:outline-none gap-2"
         >
-          <div className="w-5">
+          <div className="flex flex-row justify-center items-center text-[#DF2060]">
             <button
               type="button"
               className={`outline-none rounded-full border-2 border-[#DF2060]
@@ -144,7 +144,7 @@ export default function TodoInput({
         m-0 rounded-lg shadow-md box-border outline-none
         focus-within:border-[#DF2060] focus:outline-none gap-2"
         >
-          <div className="w-5">
+          <div className="flex flex-row justify-center items-center text-[#DF2060]">
             <button
               type="button"
               className={`outline-none rounded-full border-2 border-[#DF2060]

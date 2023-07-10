@@ -13,7 +13,7 @@ const InputPassword: React.FC<InputPasswordProps> = ({ register, errors }) => (
       border-1 border-white m-0 rounded-lg shadow-md box-border outline-none
       focus-within:border-[#DF2060] focus:outline-none gap-2"
     >
-      <div className="w-5">
+      <div className="flex flex-row justify-center items-center text-[#DF2060]">
         <button
           type="button"
           className="outline-none rounded-full border-2 border-[#DF2060] bg-white text-white h-5 w-5 text-xs"
