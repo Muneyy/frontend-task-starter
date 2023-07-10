@@ -40,10 +40,6 @@ export default function TodoItem({
     register,
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = async () => {
-    setIsChecked(!isChecked);
-  };
-
   const {
     client, token,
   } = useContext(AuthContext);
